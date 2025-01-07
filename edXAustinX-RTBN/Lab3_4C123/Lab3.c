@@ -287,15 +287,26 @@ void Task2(void){uint32_t data;
 // Inputs:  none
 // Outputs: none
 void Task3(void){
+  // static variables to keep track of the previous state of the switches
   static uint8_t prev1 = 0, prev2 = 0;
-  uint8_t current;
+
+  // loop forever
   while(1){
-    TExaS_Task3();     // records system time in array, toggles virtual logic analyzer
-    Profile_Toggle3(); // viewed by a real logic analyzer to know Task3 started
+    // record system time in array and toggle virtual logic analyzer
+    TExaS_Task3();
+    // record system time in array and toggle virtual logic analyzer
+    Profile_Toggle3();
+
+    // turn off the buzzer
     BSP_Buzzer_Set(0);
-    current = BSP_Button1_Input();
+
+    // read the current state of button 1
+    uint8_t current = BSP_Button1_Input();
+
+    // if button 1 was pressed since the last loop
     if((current == 0) && (prev1 != 0)){
-      // Button1 was pressed since last loop
+      // button 1 was pressed
+      // change the plot state
       if(PlotState == Accelerometer){
         PlotState = Microphone;
       } else if(PlotState == Microphone){
@@ -305,13 +316,21 @@ void Task3(void){
       } else if(PlotState == Light){
         PlotState = Accelerometer;
       }
-      ReDrawAxes = 1;                // redraw axes on next call of display task
-      BSP_Buzzer_Set(512);           // beep until next call of this task
+      // redraw the axes on the next call of the display task
+      ReDrawAxes = 1;
+      // make a beep
+      BSP_Buzzer_Set(512);
     }
+    // remember the current state of button 1
     prev1 = current;
+
+    // read the current state of button 2
     current = BSP_Button2_Input();
+
+    // if button 2 was pressed since the last loop
     if((current == 0) && (prev2 != 0)){
-      // Button2 was pressed since last loop
+      // button 2 was pressed
+      // change the plot state
       if(PlotState == Accelerometer){
         PlotState = Light;
       } else if(PlotState == Microphone){
@@ -321,19 +340,30 @@ void Task3(void){
       } else if(PlotState == Light){
         PlotState = Temperature;
       }
-      ReDrawAxes = 1;                // redraw axes on next call of display task
-      BSP_Buzzer_Set(512);           // beep until next call of this task
+      // redraw the axes on the next call of the display task
+      ReDrawAxes = 1;
+      // make a beep
+      BSP_Buzzer_Set(512);
     }
+    // remember the current state of button 2
     prev2 = current;
+
     // update the LED
     switch(AlgorithmState){
       case LookingForMax: BSP_RGB_Set(500, 0, 0); break;
+      // red: LookingForMax
       case LookingForCross1: BSP_RGB_Set(350, 350, 0); break;
+      // yellow: LookingForCross1
       case LookingForMin: BSP_RGB_Set(0, 500, 0); break;
+      // green: LookingForMin
       case LookingForCross2: BSP_RGB_Set(0, 0, 500); break;
+      // blue: LookingForCross2
       default: BSP_RGB_Set(0, 0, 0);
+      // off: invalid state
     }
-    OS_Sleep(10); // debounce the switches
+
+    // sleep for 10 ms
+    OS_Sleep(10);
   }
 }
 /* ****************************************** */

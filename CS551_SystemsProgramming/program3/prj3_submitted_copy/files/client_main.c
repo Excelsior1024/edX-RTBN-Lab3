@@ -432,6 +432,21 @@ getOptsPass1(struct option options[], int argc, const char *argv[], Opts *optsP)
   }
 }
 
+/**
+ * Process command-line arguments to configure matrix multiplication tests.
+ * 
+ * This function processes command-line arguments to configure matrix
+ * multiplication tests. It looks for options which specify the input
+ * test files, random matrices, gold standard matrices, tracing, and
+ * output. If no input files or random matrices are provided, it reads
+ * test matrices from stdin. It handles options for tracing, output,
+ * and gold standard testing.
+ *
+ * @param options An array of command-line options.
+ * @param argc The number of command-line arguments.
+ * @param argv An array of command-line argument strings.
+ * @param optsP A pointer to a struct containing the parsed options.
+ */
 static void
 getOptsPass2(struct option options[], int argc, const char *argv[], Opts *optsP)
 {
@@ -481,6 +496,24 @@ getOptsPass2(struct option options[], int argc, const char *argv[], Opts *optsP)
   if (!optsP->rands && !optsP->datas) newTestData("-", &optsP->datas);
 }
 
+/**
+ * Main function for the matrix multiplication client program.
+ * 
+ * This function processes command-line arguments to configure matrix
+ * multiplication tests. It initializes the necessary structures and
+ * resources, including server directory and matrix multiplication
+ * module, and performs matrix multiplication tests based on the
+ * provided input files or random specifications. It handles options
+ * for tracing, output, and gold standard testing. If no input files
+ * or random matrices are provided, it reads test matrices from stdin.
+ * 
+ * The function performs cleanup by freeing allocated resources and
+ * checks for errors during matrix multiplication, outputting error
+ * messages when necessary.
+ *
+ * @param argc The number of command-line arguments.
+ * @param argv An array of command-line argument strings.
+ */
 int
 main(int argc, const char *argv[])
 {
